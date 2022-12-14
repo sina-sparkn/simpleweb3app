@@ -6,17 +6,40 @@ import "hardhat/console.sol";
 
 contract newContract {
     constructor() {
-        console.log("sina");
+        console.log("sina is back baby!");
     }
+
+    event newSalam(
+        address indexed salamkon,
+        string indexed message,
+        uint256 timestamp
+    );
+
+    struct salamkona {
+        address salamkon;
+        string message;
+        uint256 timestamp;
+    }
+
+    salamkona[] salamkonha;
 
     mapping(string => uint256) numToUser;
 
     uint256 totalSalams;
 
-    function Salam(string memory userName) public {
+    function Salam(string memory userName, string memory message) public {
         numToUser[userName] += 1;
         totalSalams += 1;
-        console.log("%s aka %s said Salam", msg.sender, userName);
+        console.log(
+            "%s aka %s said Salam with massage : %s",
+            msg.sender,
+            userName,
+            message
+        );
+
+        salamkonha.push(salamkona(msg.sender, message, block.timestamp));
+
+        emit newSalam(msg.sender, message, block.timestamp);
     }
 
     function getTotalSalams() public view returns (uint256) {
@@ -24,20 +47,15 @@ contract newContract {
         return (totalSalams);
     }
 
-    function getUserSalams(string memory userName) public view {
-        if (numToUser[userName] == 1) {
-            console.log("the user %s have said salam once!", userName);
-        } else if (numToUser[userName] == 2) {
-            console.log("the user %s have said salam twice!", userName);
-        } else {
-            console.log(
-                "the user %s have said salam %d times",
-                userName,
-                numToUser[userName]
-            );
-        }
+    function getAllSalamkona() public view returns (salamkona[] memory) {
+        return salamkonha;
     }
 
-    // todo make a small change to this SC then continue OK?
-    // *I think I've done it!
+    function getUserSalams(string memory userName)
+        public
+        view
+        returns (uint256)
+    {
+        return numToUser[userName];
+    }
 }
