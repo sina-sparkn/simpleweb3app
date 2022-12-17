@@ -10,43 +10,42 @@ contract newContract {
     event newSalam(
         address indexed salamkon,
         string indexed message,
+        uint256 indexed numberOfSalams,
         uint256 timestamp
     );
 
     struct salamkona {
         address salamkon;
         string message;
-        uint256 timestamp;
-        string username;
         uint256 numberOfSalams;
+        uint256 timestamp;
     }
 
     salamkona[] salamkonha;
 
-    mapping(string => uint256) nameToNumber;
+    mapping(address => uint256) addressToNumber;
 
-    function Salam(string memory userName, string memory message) public {
+    function Salam(string memory message) public {
         totalSalams += 1;
-        nameToNumber[userName] += 1;
+        addressToNumber[msg.sender] += 1;
 
-        console.log(
-            "%s aka %s said Salam with massage : %s",
-            msg.sender,
-            userName,
-            message
-        );
+        console.log("%s said Salam with massage : %s", msg.sender, message);
 
         salamkonha.push(
             salamkona(
                 msg.sender,
                 message,
-                block.timestamp,
-                userName,
-                nameToNumber[userName]
+                addressToNumber[msg.sender],
+                block.timestamp
             )
         );
 
-        emit newSalam(msg.sender, message, block.timestamp);
+        emit newSalam(
+            msg.sender,
+            message,
+            addressToNumber[msg.sender],
+            block.timestamp
+        );
     }
 
     function getTotalSalams() public view returns (uint256) {
@@ -58,11 +57,7 @@ contract newContract {
         return salamkonha;
     }
 
-    function getusersSalams(string memory userName)
-        public
-        view
-        returns (uint256)
-    {
-        return nameToNumber[userName];
+    function getUsersSalams(address user) public view returns (uint256) {
+        return addressToNumber[user];
     }
 }
