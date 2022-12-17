@@ -5,9 +5,7 @@ pragma solidity ^0.8.17;
 import "hardhat/console.sol";
 
 contract newContract {
-    constructor() {
-        console.log("sina is back baby!");
-    }
+    uint256 totalSalams;
 
     event newSalam(
         address indexed salamkon,
@@ -19,17 +17,18 @@ contract newContract {
         address salamkon;
         string message;
         uint256 timestamp;
+        string username;
+        uint256 numberOfSalams;
     }
 
     salamkona[] salamkonha;
 
-    mapping(string => uint256) numToUser;
-
-    uint256 totalSalams;
+    mapping(string => uint256) nameToNumber;
 
     function Salam(string memory userName, string memory message) public {
-        numToUser[userName] += 1;
         totalSalams += 1;
+        nameToNumber[userName] += 1;
+
         console.log(
             "%s aka %s said Salam with massage : %s",
             msg.sender,
@@ -37,7 +36,15 @@ contract newContract {
             message
         );
 
-        salamkonha.push(salamkona(msg.sender, message, block.timestamp));
+        salamkonha.push(
+            salamkona(
+                msg.sender,
+                message,
+                block.timestamp,
+                userName,
+                nameToNumber[userName]
+            )
+        );
 
         emit newSalam(msg.sender, message, block.timestamp);
     }
@@ -51,11 +58,11 @@ contract newContract {
         return salamkonha;
     }
 
-    function getUserSalams(string memory userName)
+    function getusersSalams(string memory userName)
         public
         view
         returns (uint256)
     {
-        return numToUser[userName];
+        return nameToNumber[userName];
     }
 }

@@ -1,9 +1,9 @@
-// !contract address : 0xC99dA8eD0c3130391Fcb966500B26b0eAA0B12cb
+// !new contract address: 0x2776aE4A56eE408bF834BF0aD7EBbFB572D93492
 const main = async () => {
   const [deployer] = await hre.ethers.getSigners();
   const accountBalance = await deployer.getBalance();
 
-  console.log(`deploying contracts with account ${deployer.address}`);
+  console.log(`deploying contracts with account : ${deployer.address}`);
   console.log(`account balance: ${accountBalance.toString()}`);
 
   const wavecontractFactory = await hre.ethers.getContractFactory(
@@ -12,7 +12,7 @@ const main = async () => {
   const waveContract = await wavecontractFactory.deploy();
   await waveContract.deployed();
 
-  console.log(`Contract address : ${waveContract.address}`);
+  console.log(`Contract Address : ${waveContract.address}`);
 };
 
 async function runMain() {
