@@ -1,4 +1,4 @@
-// !new contract address: 0xa4578DBB1528BacDeb2BE49206de0693bb6C32A1
+// !new contract address: 0x51a6Af4ffD3984B681ec9d2deC75e26a39B8aeC5
 const main = async () => {
   const [deployer] = await hre.ethers.getSigners();
   const accountBalance = await deployer.getBalance();
@@ -9,7 +9,9 @@ const main = async () => {
   const wavecontractFactory = await hre.ethers.getContractFactory(
     "newContract"
   );
-  const waveContract = await wavecontractFactory.deploy();
+  const waveContract = await wavecontractFactory.deploy({
+    value: hre.ethers.utils.parseEther("0.1"),
+  });
   await waveContract.deployed();
 
   console.log(`Contract Address : ${waveContract.address}`);

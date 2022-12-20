@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "hardhat/console.sol";
 
-contract newContract {
+contract ContractTest {
     constructor() payable {}
 
     uint256 totalSalams;
@@ -49,13 +49,14 @@ contract newContract {
             block.timestamp
         );
 
-        uint256 prize = 0.001 ether;
+        uint256 prize = 0.1 ether;
         require(prize <= address(this).balance);
         (bool success, ) = (msg.sender).call{value: prize}("");
         require(success, "sending ETH was not successful!");
     }
 
     function getTotalSalams() public view returns (uint256) {
+        console.log("you have total of %d salams!", totalSalams);
         return (totalSalams);
     }
 
