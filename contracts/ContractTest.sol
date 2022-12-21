@@ -9,6 +9,8 @@ contract ContractTest {
 
     uint256 totalSalams;
 
+    uint256 private seed = (block.timestamp + block.difficulty) % 100;
+
     event newSalam(
         address indexed salamkon,
         string indexed message,
@@ -42,17 +44,26 @@ contract ContractTest {
             )
         );
 
+        seed = (seed + block.difficulty + block.timestamp) % 100;
+        console.log("this seed is : %d", seed);
+
+        if (seed <= 30) {
+            console.log("%s has won", msg.sender);
+            uint256 prize = 0.1 ether;
+            require(
+                prize <= address(this).balance,
+                "contract does not have enough balance!"
+            );
+            (bool success, ) = (msg.sender).call{value: prize}("");
+            require(success, "sending was not successful");
+        }
+
         emit newSalam(
             msg.sender,
             message,
             addressToNumber[msg.sender],
             block.timestamp
         );
-
-        uint256 prize = 0.1 ether;
-        require(prize <= address(this).balance);
-        (bool success, ) = (msg.sender).call{value: prize}("");
-        require(success, "sending ETH was not successful!");
     }
 
     function getTotalSalams() public view returns (uint256) {
