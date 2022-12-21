@@ -5,11 +5,12 @@ pragma solidity ^0.8.17;
 import "hardhat/console.sol";
 
 contract ContractTest {
-    constructor() payable {}
-
     uint256 totalSalams;
+    uint256 private seed;
 
-    uint256 private seed = (block.timestamp + block.difficulty) % 100;
+    constructor() payable {
+        seed = (block.timestamp + block.difficulty) % 100;
+    }
 
     event newSalam(
         address indexed salamkon,
@@ -28,8 +29,14 @@ contract ContractTest {
     salamkona[] salamkonha;
 
     mapping(address => uint256) addressToNumber;
+    mapping(address => uint256) cooldownPerAddress;
 
     function Salam(string memory message) public {
+        require(
+            cooldownPerAddress[msg.sender] + 15 minutes < block.timestamp,
+            "wait and try 15 minutes later"
+        );
+
         totalSalams += 1;
         addressToNumber[msg.sender] += 1;
 
@@ -57,6 +64,8 @@ contract ContractTest {
             (bool success, ) = (msg.sender).call{value: prize}("");
             require(success, "sending was not successful");
         }
+
+        cooldownPerAddress[msg.sender] = block.timestamp;
 
         emit newSalam(
             msg.sender,

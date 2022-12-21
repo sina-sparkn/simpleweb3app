@@ -1,5 +1,5 @@
 const main = async () => {
-  const [owner, sina, ali] = await hre.ethers.getSigners();
+  const [owner, sina] = await hre.ethers.getSigners();
 
   const waveContractFactory = await hre.ethers.getContractFactory(
     "ContractTest"
@@ -28,9 +28,6 @@ const main = async () => {
 
   let salam3 = await waveContract.connect(sina).Salam("test message 3");
   await salam3.wait();
-
-  let salam4 = await waveContract.connect(ali).Salam("test message 4");
-  await salam4.wait();
 
   let aftercontractBalance = await hre.ethers.provider.getBalance(
     waveContract.address
