@@ -32,10 +32,14 @@ contract ContractTest {
     mapping(address => uint256) cooldownPerAddress;
 
     function Salam(string memory message) public {
+        //! minutes???
         require(
             cooldownPerAddress[msg.sender] + 15 minutes < block.timestamp,
             "wait and try 15 minutes later"
         );
+
+        console.log("15 minutes : ", 15 minutes);
+        console.log("time Stamp : ", block.timestamp);
 
         totalSalams += 1;
         addressToNumber[msg.sender] += 1;
@@ -51,6 +55,7 @@ contract ContractTest {
             )
         );
 
+        //! Random number???
         seed = (seed + block.difficulty + block.timestamp) % 100;
         console.log("this seed is : %d", seed);
 

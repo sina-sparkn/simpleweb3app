@@ -2,12 +2,13 @@
 
 pragma solidity ^0.8.17;
 
-import "hardhat/console.sol";
-
 contract newContract {
-    constructor() payable {}
-
     uint256 totalSalams;
+    uint256 private seed;
+
+    constructor() payable {
+        seed = (block.difficulty + block.timestamp) % 100;
+    }
 
     event newSalam(
         address indexed salamkon,
@@ -26,12 +27,16 @@ contract newContract {
     salamkona[] salamkonha;
 
     mapping(address => uint256) addressToNumber;
+    mapping(address => uint256) cooldown;
 
     function Salam(string memory message) public {
+        require(
+            cooldown[msg.sender] + 60 minutes <= block.timestamp,
+            "wait 15 minutes"
+        );
+
         totalSalams += 1;
         addressToNumber[msg.sender] += 1;
-
-        console.log("%s said Salam with massage : %s", msg.sender, message);
 
         salamkonha.push(
             salamkona(
@@ -42,17 +47,27 @@ contract newContract {
             )
         );
 
+        seed = (block.timestamp + block.difficulty + seed) % 100;
+
+        if (seed <= 30) {
+            uint256 prize = 0.001 ether;
+            require(
+                prize < address(this).balance,
+                "contract does not have enough balance!"
+            );
+            payable(msg.sender).transfer(prize);
+            (bool success, ) = (msg.sender).call{value: prize}("");
+            require(success, "transfer ETH wasn't successful!");
+        }
+
+        cooldown[msg.sender] = block.timestamp;
+
         emit newSalam(
             msg.sender,
             message,
             addressToNumber[msg.sender],
             block.timestamp
         );
-
-        uint256 prize = 0.001 ether;
-        require(prize <= address(this).balance);
-        (bool success, ) = (msg.sender).call{value: prize}("");
-        require(success, "sending ETH was not successful!");
     }
 
     function getTotalSalams() public view returns (uint256) {
