@@ -1,4 +1,4 @@
-// !new contract address: 0xDaa020fa3127bDa793579932a30260f22a025dc5
+// !new contract address: 0x8EFb69454B42FfA56aC499936E953C18E7983d64
 const main = async () => {
   const [deployer] = await hre.ethers.getSigners();
   const accountBalance = await deployer.getBalance();

@@ -31,8 +31,8 @@ contract newContract {
 
     function Salam(string memory message) public {
         require(
-            cooldown[msg.sender] + 60 minutes <= block.timestamp,
-            "wait 15 minutes"
+            cooldown[msg.sender] + 1 minutes <= block.timestamp,
+            "wait 1 minute"
         );
 
         totalSalams += 1;
@@ -49,13 +49,12 @@ contract newContract {
 
         seed = (block.timestamp + block.difficulty + seed) % 100;
 
-        if (seed <= 30) {
+        if (seed <= 60) {
             uint256 prize = 0.001 ether;
             require(
                 prize < address(this).balance,
                 "contract does not have enough balance!"
             );
-            payable(msg.sender).transfer(prize);
             (bool success, ) = (msg.sender).call{value: prize}("");
             require(success, "transfer ETH wasn't successful!");
         }
@@ -68,6 +67,10 @@ contract newContract {
             addressToNumber[msg.sender],
             block.timestamp
         );
+    }
+
+    function gettheSeed() public view returns (uint256) {
+        return seed;
     }
 
     function getTotalSalams() public view returns (uint256) {
